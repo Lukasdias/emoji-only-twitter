@@ -7,7 +7,8 @@ import { api } from "~/utils/api";
 import { motion } from "framer-motion";
 
 const Home: NextPage = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const { data } = api.posts.getAll.useQuery();
+
   const { user } = useUser();
   return (
     <>
@@ -34,10 +35,17 @@ const Home: NextPage = () => {
           <span className="rounded-2xl bg-zinc-700 p-2 text-4xl font-bold">
             Auth with Clerk
           </span>
-          <span className="p-2 text-2xl font-bold">
-            {hello.data ? hello.data.greeting : "Loading..."}
-          </span>
+          <span className="p-2 text-2xl font-bold"></span>
           {!!user ? <SignOutButton /> : <SignInButton />}
+          <div className="flex flex-col items-center justify-center space-y-4">
+            {data?.map((post) => (
+              <Link key={post.id} href={`/posts/${post.id}`}>
+                <p className="text rounded-2xl bg-zinc-700 p-2 font-bold">
+                  {JSON.stringify(post, null, 2)}
+                </p>
+              </Link>
+            ))}
+          </div>
         </motion.div>
       </main>
     </>
