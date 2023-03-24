@@ -4,7 +4,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
-import { AnimatePresence } from "framer-motion";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
