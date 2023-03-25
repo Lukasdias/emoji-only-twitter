@@ -3,6 +3,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { memo } from "react";
 import { api, type RouterOutputs } from "~/utils/api";
 import { NativeAvatar } from "./Avatar";
+import { LoadingPage } from "./common/LoadingPage";
 dayjs.extend(relativeTime);
 
 type PostWithUser = RouterOutputs["posts"]["getAll"][number];
@@ -32,14 +33,12 @@ const PostView = ({ ...props }: PostWithUser) => {
   );
 };
 
-interface Props {
-  posts: PostWithUser[];
-}
-
-export const Posts: React.FC<Props> = memo(({ ...props }) => {
+export const Posts = memo(() => {
+  const { data: posts, isLoading: postsLoading } = api.posts.getAll.useQuery();
+  if (postsLoading) return <LoadingPage />;
   return (
     <div className="flex flex-col">
-      {props.posts?.map((fullPost) => (
+      {posts?.map((fullPost) => (
         <PostView key={fullPost.post.id} {...fullPost} />
       ))}
     </div>

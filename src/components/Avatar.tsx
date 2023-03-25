@@ -1,8 +1,7 @@
-import React from "react";
 import * as Avatar from "@radix-ui/react-avatar";
-import { motion } from "framer-motion";
 import clsx from "clsx";
-
+import { AnimatePresence, motion } from "framer-motion";
+import { Loading } from "./common/Loading";
 interface AvatarProps {
   fallbackText: string;
   src: string;
@@ -32,17 +31,32 @@ export const NativeAvatar = ({ ...props }: AvatarProps) => {
 
   return (
     <AvatarRoot className={rootClass}>
-      <AvatarImage
-        className="h-full w-full rounded-[inherit] object-cover"
-        src={props.src}
-        alt={props.alt}
-      />
-      <AvatarFallback
-        className="leading-1 flex h-full w-full items-center justify-center bg-white text-[15px] font-medium text-violet-700"
-        delayMs={600}
-      >
-        {props.fallbackText?.toLocaleUpperCase()}
-      </AvatarFallback>
+      <AnimatePresence>
+        <AvatarImage
+          initial={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: 1,
+          }}
+          className="h-full w-full rounded-[inherit] object-cover"
+          src={props.src}
+          alt={props.alt}
+        />
+      </AnimatePresence>
+      <AnimatePresence>
+        <AvatarFallback
+          initial={{
+            opacity: 0,
+          }}
+          animate={{
+            opacity: 1,
+          }}
+          className="flex h-full w-full items-center justify-center bg-violet-600 "
+        >
+          <Loading isLoading />
+        </AvatarFallback>
+      </AnimatePresence>
     </AvatarRoot>
   );
 };

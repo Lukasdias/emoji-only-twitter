@@ -1,5 +1,6 @@
 import { SignInButton, useUser } from "@clerk/nextjs";
 import { NativeAvatar } from "~/components/Avatar";
+import { LoadingPage } from "./common/LoadingPage";
 
 const CreatePostWizard = () => {
   const { user } = useUser();
@@ -27,7 +28,8 @@ const CreatePostWizard = () => {
 };
 
 export const Profile = () => {
-  const { isSignedIn } = useUser();
+  const { isSignedIn, isLoaded } = useUser();
+  if (!isLoaded) return <LoadingPage />;
   return (
     <>
       <div className={"flex justify-center border-b border-slate-400 p-4"}>

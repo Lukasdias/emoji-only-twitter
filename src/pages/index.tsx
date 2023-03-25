@@ -1,28 +1,12 @@
 import { type NextPage } from "next";
 import Head from "next/head";
+import { Container, ContentContainer } from "~/components/common/Containers";
+import { Posts } from "~/components/Posts";
+import { Profile } from "~/components/Profile";
 import { api } from "~/utils/api";
-import { Profile } from "../components/Profile";
-import { Posts } from "../components/Posts";
-import { Container, ContentContainer } from "../components/common/Containers";
-import { AnimatePresence, motion } from "framer-motion";
 
 const Home: NextPage = () => {
-  const { data, isLoading } = api.posts.getAll.useQuery();
-
-  if (isLoading)
-    return (
-      <AnimatePresence>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className={"flex h-screen w-screen items-center justify-center"}
-        >
-          Loading...
-        </motion.div>
-      </AnimatePresence>
-    );
-  if (!data) return <div>Something went wrong...</div>;
-
+  api.posts.getAll.useQuery();
   return (
     <>
       <Head>
@@ -33,7 +17,7 @@ const Home: NextPage = () => {
       <Container>
         <ContentContainer>
           <Profile />
-          <Posts posts={data} />
+          <Posts />
         </ContentContainer>
       </Container>
     </>
