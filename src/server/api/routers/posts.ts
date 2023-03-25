@@ -1,10 +1,13 @@
+import { POST_SCHEMA, type POST_FORM } from "~/utils/schemas";
 import type { User } from "@clerk/clerk-sdk-node";
 import clerkClient from "@clerk/clerk-sdk-node";
-import { privateProcedure } from "./../trpc";
 
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  publicProcedure,
+  privateProcedure,
+} from "~/server/api/trpc";
 
 const filterUserForCLient = (user: User) => {
   const { id, emailAddresses, firstName, lastName, profileImageUrl, username } =
@@ -50,17 +53,7 @@ export const postsRouter = createTRPCRouter({
     });
   }),
   create: privateProcedure
-    .input(
-      z.object({
-        content: z
-          .string()
-          .emoji({
-            message: "Only emojis allowed in posts",
-          })
-          .min(1)
-          .max(280),
-      })
-    )
+    .input(POST_SCHEMA)
     .mutation(async ({ ctx, input }) => {
       const authorId = ctx.userId;
       const post = await ctx.prisma.post.create({
