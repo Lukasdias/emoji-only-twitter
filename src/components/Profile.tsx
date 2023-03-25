@@ -1,8 +1,13 @@
 import { SignInButton, useUser } from "@clerk/nextjs";
+import { useState } from "react";
 import { NativeAvatar } from "~/components/Avatar";
+import { api } from "~/utils/api";
+import { Button } from "./common/Button";
 
 const CreatePostWizard = () => {
   const { user } = useUser();
+  const { mutate } = api.posts.create.useMutation();
+  const [input, setInput] = useState<string>("");
   if (!user) return null;
   return (
     <div className="flex w-full flex-col gap-4">
@@ -18,10 +23,15 @@ const CreatePostWizard = () => {
       </div>
 
       <input
+        value={input}
         type="text"
         placeholder="What's on your mind?"
         className={"rounded border border-slate-400 bg-transparent p-3"}
+        onChange={(e) => setInput(e.target.value)}
       />
+      <Button variant={"success"} onClick={() => mutate({ content: input })}>
+        Post
+      </Button>
     </div>
   );
 };
